@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
           <SessionProvider>
               {children}
           </SessionProvider>
+          <div id="modal-root"></div>
       </body>
     </html>
   );
