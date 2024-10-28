@@ -2,14 +2,22 @@
 
 import { signIn } from 'next-auth/react';
 import Image from "next/image";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import UserRegModal from "@/app/components/UserRegModal";
-import { useRouter } from 'next/navigation'; // next/navigation에서 가져옴
+import { useSearchParams } from 'next/navigation'; // next/navigation에서 가져옴
 
 export default function SignInPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({ loginId: '', password: '' }); // 하나의 상태로 관리
-    const router = useRouter();
+    const searchParams = useSearchParams();
+    const error = searchParams.get('error');
+
+    useEffect(() => {
+        // 쿼리 파라미터가 'not_authenticated'일 때 alert 표시
+        if (error === 'not_authenticated') {
+            alert('로그인이 필요합니다.');
+        }
+    }, [error]);
 
     // 입력 변경 핸들러
     const handleChange = (e) => {
@@ -32,7 +40,7 @@ export default function SignInPage() {
 
         try {
             const result = await signIn('credentials', {
-                redirect: false,
+                redirect: true,
                 loginId: formData.loginId,
                 password: formData.password,
             });

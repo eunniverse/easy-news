@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-// matcher로 특정 경로에 미들웨어를 적용합니다.
+// config 객체의 matcher 설정은 미들웨어 함수 내부에서 별도로 경로를 확인하지 않고도 특정 경로에만 미들웨어가 자동으로 작동하도록 해줌
 export const config = {
     matcher: ['/dashboard/:path*'], // 대시보드와 그 하위 경로에만 적용
 };
@@ -15,15 +15,12 @@ export async function middleware(req) {
 
     // URL 객체를 생성해서 현재 경로 정보를 가져옴
     const { pathname } = req.nextUrl;
-    console.log(token, '  ,', pathname);
 
-    // 로그인이 필요한 페이지들에 대해 처리 (예: /dashboard 경로)
-    if (pathname.startsWith('/dashboard')) {
-        // 토큰이 없으면 로그인 페이지로 리다이렉트
-        if (!token) {
-            console.log('aaa')
-            return NextResponse.redirect(new URL('/auth/login', req.url));
-        }
+    // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+    if (!token) {
+        const signInUrl = new URL('/auth/signin', req.url);
+        signInUrl.searchParams.set('error', 'not_authenticated');
+        return NextResponse.redirect(signInUrl);
     }
 
     // 토큰이 있으면 요청을 그대로 진행

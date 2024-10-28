@@ -61,8 +61,12 @@ export const authOptions = {
     // JWT 관리
     jwt: {
         secret: process.env.NEXTAUTH_SECRET,
+        maxAge: 60 * 60 * 24 * 30, // 30일
     },
     callbacks: {
+        async redirect({ url, baseUrl }) {
+            return `${baseUrl}/dashboard`;
+        },
         // JWT 생성 시 사용자 정보를 포함
         async jwt({ token, user }) {
             if (user) {
@@ -76,6 +80,8 @@ export const authOptions = {
 
         // 세션이 생성될 때 JWT 토큰 정보를 포함시킴
         async session({ session, token }) {
+            console.debug('token = ', token, '  session = ', session)
+
             // 세션에 JWT에서 가져온 사용자 정보 추가
             session.user.id = token.id;
             session.user.email = token.email;
