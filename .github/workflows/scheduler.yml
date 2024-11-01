@@ -1,0 +1,15 @@
+name: Scheduled RSS Fetch
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 매일 새벽 2시 (UTC 기준)
+  workflow_dispatch:       # 수동 실행 트리거 추가
+
+jobs:
+  fetch-rss:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send GET request to RSS endpoint
+        run: |
+          curl -X GET "http://localhost:3000/api/rss"

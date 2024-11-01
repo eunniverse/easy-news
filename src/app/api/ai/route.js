@@ -4,7 +4,7 @@ import extractJSON from 'extract-json-from-string';
 const deepl = require('deepl-node');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-const translator = new deepl.Translator('dfded161-fdc3-486b-bc00-82f02c956917:fx');
+const translator = new deepl.Translator(process.env.DEEPL_API_KEY);
 
 export async function POST(req) {
     try {

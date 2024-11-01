@@ -2,8 +2,6 @@
 import Parser from 'rss-parser';
 import {NextResponse} from "next/server";
 import prisma from "../../../../lib/prisma";
-import {Readability} from "@mozilla/readability";
-import {JSDOM} from "jsdom";
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -20,9 +18,11 @@ export async function GET() {
 
     const items = feed.items;
 
-    // for(let item in items) {
-       await saveRSSData(items[0]);
-    //}
+    for(let index in items) {
+       await saveRSSData(items[index]);
+    }
+
+    console.log('complete scheduler!');
 
     return NextResponse.json(feed); // 피드에서 주요 항목만 클라이언트에 전달
 }
