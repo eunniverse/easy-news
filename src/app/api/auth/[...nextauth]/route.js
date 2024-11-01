@@ -80,8 +80,6 @@ export const authOptions = {
 
         // 세션이 생성될 때 JWT 토큰 정보를 포함시킴
         async session({ session, token }) {
-            console.debug('token = ', token, '  session = ', session)
-
             // 세션에 JWT에서 가져온 사용자 정보 추가
             session.user.id = token.id;
             session.user.email = token.email;

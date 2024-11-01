@@ -46,14 +46,14 @@ export default function SignInPage() {
             });
 
             if (result && result.error) {
-                console.log(result)
+                console.error(result)
                 alert('로그인에 실패하였습니다.');
 
             } else {
                 router.push('/dashboard');
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             alert('로그인에 실패하였습니다.');
         }
     };
