@@ -2,14 +2,46 @@ name: Scheduled RSS Fetch
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # 매일 새벽 2시 (UTC 기준)
-  workflow_dispatch:       # 수동 실행 트리거 추가
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
 jobs:
   fetch-rss:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send GET request to RSS endpoint
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start Next.js server
+        run: npm run start &  # 백그라운드에서 서버 실행
+        env:
+          PORT: 3000
+
+      - name: Wait for server to be ready
         run: |
-          curl -X GET "http://localhost:3000/api/rss"
+          # 서버 준비 대기 (최대 20초 동안 매초마다 확인)
+          for i in {1..20}; do
+            curl -s http://localhost:3000/api/rss && break
+            sleep 1
+          done
+
+      - name: Send GET request to RSS endpoint
+        run: curl -X GET "http://localhost:3000/api/rss"
+
+#### domain 획득 이후 수정 ####
+#  fetch-rss:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Send GET request to RSS endpoint
+#        run: |
+#          curl -X GET "http://localhost:3000/api/rss"
