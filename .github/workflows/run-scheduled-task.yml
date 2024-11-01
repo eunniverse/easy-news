@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Start Next.js server
-        run: npm run start &  # 백그라운드에서 서버 실행
+        run: npm run dev & # 백그라운드에서 서버 실행
         env:
           PORT: 3000
 
