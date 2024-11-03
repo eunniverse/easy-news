@@ -21,6 +21,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Set environment variables
+        run: |
+          echo NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} >> $GITHUB_ENV
+          echo GROQ_API_KEY=${{ secrets.GROQ_API_KEY }} >> $GITHUB_ENV
+          echo DEEPL_API_KEY=${{ secrets.DEEPL_API_KEY }} >> $GITHUB_ENV
+
       - name: Verify current directory and list files
         run: |
           echo "Current directory:"
@@ -40,6 +46,9 @@ jobs:
         env:
           PORT: 3000
           DATABASE_URL: ${{ secrets.DATABASE_URL }}  # GitHub Secrets에서 가져오기
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
 
       - name: Wait for server to be ready
         run: |
