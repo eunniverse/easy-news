@@ -25,7 +25,7 @@ model News {
   idx Int @id @default(autoincrement())
   // fixme unique 걸어야함
   link String
-  title String
+  title String @unique
   content String
   published_at DateTime
   created_at DateTime @default(now())
@@ -36,7 +36,7 @@ model News {
 model News_detail {
   idx Int @id @default(autoincrement())
   news News @relation(fields: [news_idx], references: [idx])
-  news_idx Int
+  news_idx Int @unique
   summary String
   words String
 }
