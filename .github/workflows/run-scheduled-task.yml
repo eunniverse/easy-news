@@ -22,7 +22,8 @@ jobs:
         run: npm install
 
       - name: Generate Prisma Client
-        run: npx prisma generate --schema=./prisma/schema.prisma # Prisma 클라이언트 생성 명령어 추가
+        run: npx prisma generate --schema=./prisma/schema.prisma
+        working-directory: ./easy-news  # 프로젝트 루트 디렉토리 지정
         
       - name: Start Next.js server
         run: npm run dev & # 백그라운드에서 서버 실행
