@@ -42,6 +42,8 @@ async function saveRSSData(feed) {
             },
         });
 
+        console.log('        console.log(\'newsDetail finished!!!!\') finished!!!!')
+
         await saveNewsDetailData(feed.link, news.idx);
 
         return NextResponse.json({}, { status: 200 });
@@ -74,6 +76,8 @@ async function saveNewsDetailData(link, idx) {
 
         const analyzeInfo = await parseNewsByAI(content);
 
+
+        console.log('analyzeInfo => ',analyzeInfo);
         // DB 저장
         const newsDetail = await prisma.news_detail.create({
             data: {
@@ -82,6 +86,8 @@ async function saveNewsDetailData(link, idx) {
                 words: JSON.stringify(analyzeInfo.jsonArray[0].words)
             },
         });
+
+        console.log('newsDetail finished!!!!')
 
         return NextResponse.json({
             content: content,  // 텍스트 형태의 본문
