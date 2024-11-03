@@ -107,9 +107,7 @@ async function saveNewsDetailData(link, idx) {
  */
 async function parseNewsByAI(article) {
     try {
-        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';  // 기본값 추가
-
-        const res = await fetch(`${baseUrl}/api/ai`, {
+        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/ai`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
