@@ -42,7 +42,7 @@ async function saveRSSData(feed) {
             },
         });
 
-        console.log('        console.log(\'newsDetail finished!!!!\') finished!!!!')
+        console.log('newsDetail finished!!!!')
 
         await saveNewsDetailData(feed.link, news.idx);
 
@@ -64,6 +64,8 @@ async function saveNewsDetailData(link, idx) {
         return NextResponse.json({ error: 'No link provided' });
     }
 
+    console.log('link ==> ', link, '   idx ==> ', idx)
+
     try {
         const { data } = await axios.get(link);
         const $ = cheerio.load(data);
@@ -74,10 +76,11 @@ async function saveNewsDetailData(link, idx) {
         // 불필요한 패턴 제거 (예: "사진 확대" 또는 기타 텍스트 패턴)
         content = content.replace(/사진 확대|금융가 톺아보기|관련 뉴스.*|\[사진 제공\s*=\s*[^\]]+\]/gs, ' ').replace(/\s+/g, ' ').trim();
 
+        console.log('content ==> ', content)
         const analyzeInfo = await parseNewsByAI(content);
 
 
-        console.log('analyzeInfo => ',analyzeInfo);
+        console.log('analyzeInfo ==> ',analyzeInfo);
         // DB 저장
         const newsDetail = await prisma.news_detail.create({
             data: {
