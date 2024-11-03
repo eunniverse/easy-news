@@ -21,18 +21,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Verify current directory and list files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Listing root directory files:"
+          ls -al
+          echo "Listing prisma directory files:"
+          ls -al prisma
+
       - name: Generate Prisma Client
-        run: npx prisma generate --schema=./prisma/schema.prisma
-        working-directory: ./easy-news  # 프로젝트 루트 디렉토리 지정
-        
+        run: npx prisma generate --schema=prisma/schema.prisma
+
       - name: Start Next.js server
-        run: npm run dev & # 백그라운드에서 서버 실행
+        run: npm run dev &
         env:
           PORT: 3000
 
       - name: Wait for server to be ready
         run: |
-          # 최대 30초 동안 서버 준비 상태 확인
           for i in {1..30}; do
             if curl -s http://localhost:3000/api/rss; then
               echo "Server is ready"
@@ -42,15 +49,5 @@ jobs:
             sleep 1
           done
 
-
       - name: Send GET request to RSS endpoint
         run: curl -X GET "http://localhost:3000/api/rss"
-
-#### domain 획득 이후 수정 ####
-#  fetch-rss:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Send GET request to RSS endpoint
-#        run: |
-#          curl -X GET "http://localhost:3000/api/rss"
