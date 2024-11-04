@@ -33,18 +33,19 @@ export async function GET() {
  */
 async function saveRSSData(feed) {
     try {
+        const content = await getContentByLink(feed.link);
         const news = await prisma.news.create({
             data: {
                 link: feed.link,
                 title: feed.title,
-                content: feed.content,
+                content: content,
                 published_at: new Date(feed.pubDate)
             },
         });
 
         console.log('newsDetail finished!!!!')
 
-        await saveNewsDetailData(feed.link, news.idx);
+        await saveNewsDetailData(content, news.idx);
 
         return NextResponse.json({}, { status: 200 });
 
@@ -55,17 +56,7 @@ async function saveRSSData(feed) {
     }
 }
 
-/**
- * 링크로 기사본문을 가져와서 가공하여 DB에 저장
- * @param res
- */
-async function saveNewsDetailData(link, idx) {
-    if (!link) {
-        return NextResponse.json({ error: 'No link provided' });
-    }
-
-    console.log('link ==> ', link, '   idx ==> ', idx)
-
+async function getContentByLink(link) {
     try {
         const { data } = await axios.get(link);
         const $ = cheerio.load(data);
@@ -75,10 +66,28 @@ async function saveNewsDetailData(link, idx) {
 
         // 불필요한 패턴 제거 (예: "사진 확대" 또는 기타 텍스트 패턴)
         content = content.replace(/사진 확대|금융가 톺아보기|관련 뉴스.*|\[사진 제공\s*=\s*[^\]]+\]/gs, ' ').replace(/\s+/g, ' ').trim();
+        console.log('content ==> ', content)
 
+        return content;
+
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
+/**
+ * 링크로 기사본문을 가져와서 가공하여 DB에 저장
+ * @param res
+ */
+async function saveNewsDetailData(content, idx) {
+    if (!content) {
+        return NextResponse.json({ error: 'No link provided' });
+    }
+
+    try {
         console.log('content ==> ', content)
         const analyzeInfo = await parseNewsByAI(content);
-
 
         console.log('analyzeInfo ==> ',analyzeInfo);
         // DB 저장

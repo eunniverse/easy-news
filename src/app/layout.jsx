@@ -3,7 +3,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from 'next-auth/react';
-import Header from "@/app/components/Header";
+import { AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,13 +18,17 @@ const geistMono = localFont({
 });
 
 export default function RootLayout({ children }) {
-  return (
+    const pathname = usePathname(); // 현재 경로를 가져옴
+
+    return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <SessionProvider>
-              {children}
-          </SessionProvider>
-          <div id="modal-root"></div>
+          <AnimatePresence initial={false}>
+              <SessionProvider key={pathname}>
+                  {children}
+              </SessionProvider>
+              <div id="modal-root"></div>
+          </AnimatePresence>
       </body>
     </html>
   );
