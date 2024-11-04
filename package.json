@@ -19,6 +19,7 @@
     "cheerio": "^1.0.0",
     "deepl-node": "^1.14.0",
     "extract-json-from-string": "^1.0.1",
+    "framer-motion": "^11.11.11",
     "groq-sdk": "^0.7.0",
     "jsdom": "^25.0.1",
     "json5": "^2.2.3",
@@ -28,10 +29,15 @@
     "npx": "^10.2.2",
     "pg": "^8.13.0",
     "react": "^18",
+    "react-contexify": "^6.0.0",
     "react-dom": "^18",
     "react-hook-form": "^7.53.1",
     "react-icons": "^5.3.0",
+    "react-loading-skeleton": "^3.5.0",
+    "react-slick": "^0.30.2",
     "rss-parser": "^3.13.0",
+    "slick-carousel": "^1.8.1",
+    "ssgoi": "^2.0.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
